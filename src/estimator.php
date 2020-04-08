@@ -35,8 +35,8 @@ function covid19ImpactEstimator($data)
   // echo $iSevereCasesByRequestedTime."\r\n";
   // echo doubleval($expectedBed) - doubleval($iSevereCasesByRequestedTime)."\r\n";
   // die;
-  $iHospitalBedsByRequestedTime = bcsub($expectedBed, $iSevereCasesByRequestedTime, 2);
-  $sHospitalBedsByRequestedTime = bcsub($expectedBed, $sSevereCasesByRequestedTime, 2);
+  $iHospitalBedsByRequestedTime = $expectedBed - $iSevereCasesByRequestedTime;
+  $sHospitalBedsByRequestedTime = $expectedBed - $sSevereCasesByRequestedTime;
   // End Compute Bed By Request
 
 
