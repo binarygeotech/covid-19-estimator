@@ -1,4 +1,5 @@
 <?php
+// ini_set("precision", 17);
 
 function covid19ImpactEstimator($data)
 {
@@ -7,8 +8,8 @@ function covid19ImpactEstimator($data)
   $days = periodToDays($data['periodType'], $data['timeToElapse']);
   $dDays = 3;
 
-  $factor = ceil($days / $dDays);
-  
+  $factor = intval($days / $dDays);
+
   // Calculate currentlyInfected
   $iCurrentlyInfected = intval($data['reportedCases']) * $impactRate ?? 0;
   $sCurrentlyInfected = intval($data['reportedCases']) * $severeRate ?? 0;
@@ -28,10 +29,14 @@ function covid19ImpactEstimator($data)
   // Compute Bed By Request
   $totalBeds = intval($data["totalHospitalBeds"]);
   $expectedPercentage = 35/100;
-  $expectedBed = ceil($totalBeds * $expectedPercentage);
+  $expectedBed = $totalBeds * $expectedPercentage;
   
-  $iHospitalBedsByRequestedTime = $expectedBed - $iSevereCasesByRequestedTime;
-  $sHospitalBedsByRequestedTime = $expectedBed - $sSevereCasesByRequestedTime;
+  // echo $expectedBed."\r\n";
+  // echo $iSevereCasesByRequestedTime."\r\n";
+  // echo doubleval($expectedBed) - doubleval($iSevereCasesByRequestedTime)."\r\n";
+  // die;
+  $iHospitalBedsByRequestedTime = bcsub($expectedBed, $iSevereCasesByRequestedTime, 2);
+  $sHospitalBedsByRequestedTime = bcsub($expectedBed, $sSevereCasesByRequestedTime, 2);
   // End Compute Bed By Request
 
 
@@ -108,19 +113,3 @@ function periodToDays($periodType, $timeToElapse)
 
   return $days;
 }
-
-// print_r(
-//   covid19ImpactEstimator([
-//     "region" => [
-//       "name" => "Africa",
-//       "avgAge" => 19.7,
-//       "avgDailyIncomeInUSD" => 5,
-//       "avgDailyIncomePopulation" => 0.71
-//     ],
-//     "periodType" => "days",
-//     "timeToElapse" => 30,
-//     "reportedCases" => 674,
-//     "population" => 66622705,
-//     "totalHospitalBeds" => 1380614
-//   ])
-// );
