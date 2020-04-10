@@ -30,10 +30,6 @@ function covid19ImpactEstimator($data)
   $expectedPercentage = 35/100;
   $expectedBed = $totalBeds * $expectedPercentage;
   
-  // echo $expectedBed."\r\n";
-  // echo $iSevereCasesByRequestedTime."\r\n";
-  // echo doubleval($expectedBed) - doubleval($iSevereCasesByRequestedTime)."\r\n";
-  // die;
   $iHospitalBedsByRequestedTime = $expectedBed - $iSevereCasesByRequestedTime;
   $sHospitalBedsByRequestedTime = $expectedBed - $sSevereCasesByRequestedTime;
   // End Compute Bed By Request
@@ -58,8 +54,12 @@ function covid19ImpactEstimator($data)
   $avgUSDIncome = $data["region"]["avgDailyIncomeInUSD"];
   $population = $data["population"];
   
-  $iDollarsInFlight = ($iInfectionsByRequestedTime * $incomePopulation) * $avgUSDIncome * $days ;
-  $sDollarsInFlight = ($sInfectionsByRequestedTime * $incomePopulation) * $avgUSDIncome * $days ;
+  // ini_set("precision", 30);
+
+  $iDollarsInFlight = (($iInfectionsByRequestedTime * $incomePopulation) * $avgUSDIncome) / $days ;
+  $sDollarsInFlight = (($sInfectionsByRequestedTime * $incomePopulation) * $avgUSDIncome) / $days ;
+  
+  // die($iDollarsInFlight);
   // End Compute Dollars In Flight
 
   $impact = [
@@ -117,19 +117,3 @@ function trimPrecision($value)
 {
   return explode('.', $value)[0];
 }
-
-// print_r(
-//   covid19ImpactEstimator([
-//     "region" => [
-//       "name" => "Africa",
-//       "avgAge" => 19.7,
-//       "avgDailyIncomeInUSD" => 5,
-//       "avgDailyIncomePopulation" => 0.63
-//     ],
-//     "periodType" => "days",
-//     "timeToElapse" => 104,
-//     "reportedCases" => 3032,
-//     "population" => 38006155,
-//     "totalHospitalBeds" => 111211
-//   ])
-// );
