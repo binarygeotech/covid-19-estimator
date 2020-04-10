@@ -1,5 +1,4 @@
 <?php
-// ini_set("precision", 17);
 
 function covid19ImpactEstimator($data)
 {
@@ -65,22 +64,22 @@ function covid19ImpactEstimator($data)
 
   $impact = [
     "currentlyInfected" => $iCurrentlyInfected,
-    "infectionsByRequestedTime" => $iInfectionsByRequestedTime,
-    "severeCasesByRequestedTime" => $iSevereCasesByRequestedTime,
-    "hospitalBedsByRequestedTime" => $iHospitalBedsByRequestedTime,
-    "casesForICUByRequestedTime" => $iCasesForICUByRequestedTime,
-    "casesForVentilatorsByRequestedTime" => $iCasesForVentilatorsByRequestedTime,
-    "dollarsInFlight" => $iDollarsInFlight
+    "infectionsByRequestedTime" => trimPrecision($iInfectionsByRequestedTime),
+    "severeCasesByRequestedTime" => trimPrecision($iSevereCasesByRequestedTime),
+    "hospitalBedsByRequestedTime" => trimPrecision($iHospitalBedsByRequestedTime),
+    "casesForICUByRequestedTime" => trimPrecision($iCasesForICUByRequestedTime),
+    "casesForVentilatorsByRequestedTime" => trimPrecision($iCasesForVentilatorsByRequestedTime),
+    "dollarsInFlight" => trimPrecision($iDollarsInFlight)
   ];
   
   $severeImpact = [
     "currentlyInfected" => $sCurrentlyInfected,
-    "infectionsByRequestedTime" => $sInfectionsByRequestedTime,
-    "severeCasesByRequestedTime" => $sSevereCasesByRequestedTime,
-    "hospitalBedsByRequestedTime" => $sHospitalBedsByRequestedTime,
-    "casesForICUByRequestedTime" => $sCasesForICUByRequestedTime,
-    "casesForVentilatorsByRequestedTime" => $sCasesForVentilatorsByRequestedTime,
-    "dollarsInFlight" => $sDollarsInFlight
+    "infectionsByRequestedTime" => trimPrecision($sInfectionsByRequestedTime),
+    "severeCasesByRequestedTime" => trimPrecision($sSevereCasesByRequestedTime),
+    "hospitalBedsByRequestedTime" => trimPrecision($sHospitalBedsByRequestedTime),
+    "casesForICUByRequestedTime" => trimPrecision($sCasesForICUByRequestedTime),
+    "casesForVentilatorsByRequestedTime" => trimPrecision($sCasesForVentilatorsByRequestedTime),
+    "dollarsInFlight" => trimPrecision($sDollarsInFlight)
   ];
 
   return compact(
@@ -113,3 +112,24 @@ function periodToDays($periodType, $timeToElapse)
 
   return $days;
 }
+
+function trimPrecision($value)
+{
+  return explode('.', $value)[0];
+}
+
+// print_r(
+//   covid19ImpactEstimator([
+//     "region" => [
+//       "name" => "Africa",
+//       "avgAge" => 19.7,
+//       "avgDailyIncomeInUSD" => 5,
+//       "avgDailyIncomePopulation" => 0.63
+//     ],
+//     "periodType" => "days",
+//     "timeToElapse" => 104,
+//     "reportedCases" => 3032,
+//     "population" => 38006155,
+//     "totalHospitalBeds" => 111211
+//   ])
+// );
